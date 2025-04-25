@@ -1,4 +1,6 @@
 require("dotenv").config();
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
 const express = require("express");
 const { json } = express;
 const cors = require("cors");
@@ -6,6 +8,7 @@ const path = require("path");
 const connectDB = require("./config/db");
 
 // const authRoutes = require("./routes/authRoutes");
+// const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -26,9 +29,11 @@ app.use(express.json());
 
 //Routes
 app.use("/api/auth", require("./routes/authRoutes"));
-// app.use("/api/users", userRoutes);
+app.use("/api/users", require("./routes/userRoutes"));
 // app.use("/api/tasks", taskRoutes);
 // app.use("/api/reports", reportRoutes);
+
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 //Start Server
 const PORT = process.env.PORT || 5000;
