@@ -9,6 +9,8 @@ const connectDB = require("./config/db");
 
 // const authRoutes = require("./routes/authRoutes");
 // const userRoutes = require("./routes/userRoutes");
+// const taskRoutes = require("./routes/taskRoutes");
+// const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
 
@@ -30,8 +32,8 @@ app.use(express.json());
 //Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
-// app.use("/api/tasks", taskRoutes);
-// app.use("/api/reports", reportRoutes);
+app.use("/api/tasks", require("./routes/taskRoutes"));
+app.use("/api/reports", require("./routes/reportRoutes"));
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
