@@ -87,9 +87,9 @@ const exportUsersReport = async (req, res) => {
                         if (task.status === "Pending") {
                             userTaskMap[assignedUser._id].pendingTasks += 1;
                         } else if (task.status === "In Progress") {
-                            userTaskMap[assignedUser._id].inProgressTasks =+ 1;
+                            userTaskMap[assignedUser._id].inProgressTasks += 1;
                         }else if (task.status === "Completed") {
-                            userTaskMap[assignedUser._id].completedTasks =+ 1;
+                            userTaskMap[assignedUser._id].completedTasks += 1;
                         }
                     }
                 });
@@ -102,7 +102,7 @@ const exportUsersReport = async (req, res) => {
         worksheet.columns = [
             { header: "User Name", key: "name", width: 30 },
             { header: "Email", key: "email", width: 40 },
-            { header: "Total Assigned Tasks", key: "taskcount", width: 20 },
+            { header: "Total Assigned Tasks", key: "taskCount", width: 20 },
             { header: "Pending Tasks", key: "pendingTasks", width: 20 },
             { 
                 header: "In Progress Tasks",

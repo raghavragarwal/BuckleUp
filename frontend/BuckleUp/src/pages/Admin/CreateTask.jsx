@@ -351,4 +351,4 @@ const CreateTask = () => {
   )
 }
 
-export default CreateTask
+export default CreateTask;
