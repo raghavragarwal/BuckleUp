@@ -190,41 +190,40 @@ const updateTaskChecklist = async (req, res) => {
         if (!task) return res.status(404).json({ message: "Task not found" });
 
         if (!task.assignedTo.includes(req.user._id) && req.user.role !== "admin") {
-            return res
-                .status(403)
-                .json({ message: "Not authorized to update checklist" });
+            return res.status(403).json({ message: "Not authorized to update checklist" });
         }
 
-        task.todoChecklist = todoChecklist; // Replace with updated checklist
+        task.todoChecklist = todoChecklist;
 
-        // Auto-update progress based on checklistcompletion
-        const completedCount = task.todoChecklist.filter(
-            (item) => item.completed
-        ).length;
         const totalItems = task.todoChecklist.length;
-        task.progress =
-            totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
-        
-        // Auto-mark task as completed if all items are checked
+        const completedCount = task.todoChecklist.filter(item => item.completed).length;
+
+        // Calculate progress
+        task.progress = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
+
+        // Auto-update status based on progress
         if (task.progress === 100) {
             task.status = "Completed";
         } else if (task.progress > 0) {
             task.status = "In Progress";
         } else {
-            task.status = "Pending";
+            // Case where all checklist items are either deleted or none completed
+            task.status = totalItems === 0 ? "Pending" : "Pending";
         }
 
         await task.save();
+
         const updatedTask = await Task.findById(req.params.id).populate(
             "assignedTo",
             "name email profileImageUrl"
         );
 
-        res.json({ message: "Task checklist updated", task:updatedTask });
+        res.json({ message: "Task checklist updated", task: updatedTask });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
 
 // @desc    Dashboard data (Admin only)
 // @route   GET /api/tasks/dashboard-data
